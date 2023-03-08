@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./App.css";
 
 const WHISPER_ENDPOINT = "https://api.openai.com/v1/audio/transcriptions";
+const HELLO = "hello";
 
 function App() {
   const [selectedFile, setSelectedFile] = useState(null);
