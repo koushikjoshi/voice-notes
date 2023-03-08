@@ -27,7 +27,7 @@ function App() {
         method: "POST",
         headers: {
           Authorization:
-            "Bearer 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",
+            "Bearer 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",
         },
         body: formData,
       });
