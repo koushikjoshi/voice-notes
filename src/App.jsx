@@ -1,23 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import "./App.css";
 import { MdContentCopy } from "react-icons/md";
 
 const WHISPER_ENDPOINT = "https://api.openai.com/v1/audio/transcriptions";
-const HELLO = "hello";
 
 function App() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [transcript, setTranscript] = useState("");
   const [summary, setSummary] = useState("");
+  const [isRecording, setIsRecording] = useState(false);
+  const recorderRef = useRef(null);
 
-  const handleGenerateSummary = async () => {
-    if (!selectedFile) {
-      alert("Please select a file to generate summary");
-      return;
-    }
-
+  const handleGenerateSummary = async (audioFile) => {
     const formData = new FormData();
-    formData.append("file", selectedFile);
+    formData.append("file", audioFile);
     formData.append("model", "whisper-1");
 
     try {
@@ -35,8 +31,44 @@ function App() {
       console.error("Error:", error);
     }
   };
-  const handleFileSelect = (event) => {
-    setSelectedFile(event.target.files[0]);
+
+  const handleRecord = async () => {
+    if (isRecording) {
+      // Stop recording
+      recorderRef.current.stop();
+      setIsRecording(false);
+    } else {
+      // Start recording
+      setIsRecording(true);
+      setSelectedFile(null);
+      setTranscript("");
+      setSummary("");
+
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorder.start();
+
+      const audioChunks = [];
+      mediaRecorder.addEventListener("dataavailable", (event) => {
+        audioChunks.push(event.data);
+      });
+
+      mediaRecorder.addEventListener("stop", () => {
+        const audioBlob = new Blob(audioChunks, { type: "audio/mp3" });
+        const audioFile = new File([audioBlob], "recording.mp3", {
+          type: "audio/mp3",
+        });
+        setSelectedFile(audioFile);
+        handleGenerateSummary(audioFile);
+      });
+
+      recorderRef.current = mediaRecorder;
+      setTimeout(() => {
+        if (isRecording) {
+          handleRecord();
+        }
+      }, 60000);
+    }
   };
 
   return (
@@ -50,20 +82,21 @@ function App() {
         </div>
         <div className="upload-content">
           <div className="upload-text">
-            <p>Record your random thoughts, and get a point-by-point summary</p>
+            {isRecording ? (
+              <p>Recording...</p>
+            ) : (
+              <p>
+                Record your random thoughts, and get a point-by-point summary
+              </p>
+            )}
           </div>
           <div className="upload-logic">
-            <div className="record-btn">Start recording</div>
-            {/* <div className="upload">
-              <label>
-                OR <u style={{ cursor: "pointer" }}>Upload Audio</u>
-                <input
-                  type="file"
-                  style={{ display: "none" }}
-                  onChange={handleFileSelect}
-                />
-              </label>
-            </div> */}
+            <div
+              className={`record-btn ${isRecording ? "red" : ""}`}
+              onClick={handleRecord}
+            >
+              {isRecording ? "Stop recording" : "Start recording"}
+            </div>
           </div>
         </div>
       </div>
