@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import "./App.css";
 
 const WHISPER_ENDPOINT = "https://api.openai.com/v1/audio/transcriptions";
-const API_KEY = "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";
 
 function App() {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -24,11 +23,11 @@ function App() {
     formData.append("model", "whisper-1");
 
     try {
+      console.log(process.env.REACT_APP_API_KEY);
       const response = await fetch(WHISPER_ENDPOINT, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-          "content-type": "multipart/form-data",
+          Authorization: `Bearer ${process.env.REACT_APP_API_KEY}`,
         },
         body: formData,
       });
