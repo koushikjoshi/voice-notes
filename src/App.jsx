@@ -23,7 +23,6 @@ function App() {
     formData.append("model", "whisper-1");
 
     try {
-      console.log(process.env.REACT_APP_API_KEY);
       const response = await fetch(WHISPER_ENDPOINT, {
         method: "POST",
         headers: {
