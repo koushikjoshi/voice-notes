@@ -12,6 +12,11 @@
     #ffffff 100%
   );
 }
+.upload-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .upload-div {
   padding-top: 80px;
   align-items: center;
@@ -65,7 +70,8 @@ p {
 .upload-text {
   width: 280px;
   height: 38px;
-
+  margin-top: 18px;
+  letter-spacing: -0.02em;
   font-family: "Inter";
   font-style: normal;
   font-weight: 700;
@@ -77,6 +83,7 @@ p {
 }
 .record-btn {
   height: 48px;
+  width: 363px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -85,6 +92,15 @@ p {
   color: white;
   border-radius: 6px;
   cursor: pointer;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 19px;
+  text-align: center;
+  letter-spacing: -0.02em;
+
+  color: #ffffff;
 }
 .heading {
   width: 78px;

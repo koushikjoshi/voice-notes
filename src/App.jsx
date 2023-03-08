@@ -37,7 +37,6 @@ function App() {
   };
   const handleFileSelect = (event) => {
     setSelectedFile(event.target.files[0]);
-    handleGenerateSummary();
   };
 
   return (
@@ -55,7 +54,7 @@ function App() {
           </div>
           <div className="upload-logic">
             <div className="record-btn">Start recording</div>
-            <div className="upload">
+            {/* <div className="upload">
               <label>
                 OR <u style={{ cursor: "pointer" }}>Upload Audio</u>
                 <input
@@ -64,7 +63,7 @@ function App() {
                   onChange={handleFileSelect}
                 />
               </label>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
