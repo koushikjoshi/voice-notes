@@ -58,13 +58,29 @@
   align-items: center;
   overflow-y: auto;
 }
+.transcript-text {
+  text-align: justify;
+  padding: 20px;
+}
 .upload-btns {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  text-align: center;
 }
 .upload {
+  border: 1px solid black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   height: 50px;
   width: 150px;
   cursor: pointer;
+}
+.upload:hover {
+  background-color: aliceblue;
+}
+.upload-2 {
+  height: 50px;
+  width: 180px;
 }
