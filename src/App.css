@@ -99,6 +99,7 @@ p {
   line-height: 19px;
   text-align: center;
   letter-spacing: -0.02em;
+  overflow: hidden;
 
   color: #ffffff;
 }
@@ -156,4 +157,8 @@ p {
 }
 .copy-icon {
   cursor: pointer;
+}
+
+.record-btn.red {
+  background: red;
 }

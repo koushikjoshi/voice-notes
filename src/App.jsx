@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "./App.css";
 import { MdContentCopy } from "react-icons/md";
 
@@ -9,7 +9,20 @@ function App() {
   const [transcript, setTranscript] = useState("");
   const [summary, setSummary] = useState("");
   const [isRecording, setIsRecording] = useState(false);
+  const [progress, setProgress] = useState(0);
   const recorderRef = useRef(null);
+
+  useEffect(() => {
+    let interval;
+    if (isRecording) {
+      interval = setInterval(() => {
+        setProgress((prevProgress) => prevProgress + 1.67);
+      }, 1000);
+    } else {
+      setProgress(0);
+    }
+    return () => clearInterval(interval);
+  }, [isRecording]);
 
   const handleGenerateSummary = async (audioFile) => {
     const formData = new FormData();
@@ -95,7 +108,7 @@ function App() {
               className={`record-btn ${isRecording ? "red" : ""}`}
               onClick={handleRecord}
             >
-              {isRecording ? "Stop recording" : "Start recording"}
+              {isRecording ? "Stop Recording" : "Start Recording"}
             </div>
           </div>
         </div>
