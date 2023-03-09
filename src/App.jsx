@@ -45,42 +45,57 @@ function App() {
     }
   };
 
-  const handleRecord = async () => {
+  const startRecording = async () => {
+    setIsRecording(true);
+    setSelectedFile(null);
+    setTranscript("");
+    setSummary("");
+
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const mediaRecorder = new MediaRecorder(stream);
+    mediaRecorder.start();
+
+    const audioChunks = [];
+    mediaRecorder.addEventListener("dataavailable", (event) => {
+      audioChunks.push(event.data);
+    });
+
+    mediaRecorder.addEventListener("stop", () => {
+      const audioBlob = new Blob(audioChunks, { type: "audio/mp3" });
+      const audioFile = new File([audioBlob], "recording.mp3", {
+        type: "audio/mp3",
+      });
+      setSelectedFile(audioFile);
+      // handleGenerateSummary(audioFile);
+    });
+
+    recorderRef.current = mediaRecorder;
+  };
+
+  const stopRecording = () => {
+    recorderRef.current.stop();
+    setIsRecording(false);
+  };
+
+  useEffect(() => {
+    let timeoutId;
+
     if (isRecording) {
-      // Stop recording
-      recorderRef.current.stop();
-      setIsRecording(false);
-    } else {
-      // Start recording
-      setIsRecording(true);
-      setSelectedFile(null);
-      setTranscript("");
-      setSummary("");
-
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream);
-      mediaRecorder.start();
-
-      const audioChunks = [];
-      mediaRecorder.addEventListener("dataavailable", (event) => {
-        audioChunks.push(event.data);
-      });
-
-      mediaRecorder.addEventListener("stop", () => {
-        const audioBlob = new Blob(audioChunks, { type: "audio/mp3" });
-        const audioFile = new File([audioBlob], "recording.mp3", {
-          type: "audio/mp3",
-        });
-        setSelectedFile(audioFile);
-        handleGenerateSummary(audioFile);
-      });
-
-      recorderRef.current = mediaRecorder;
-      setTimeout(() => {
-        if (isRecording) {
-          handleRecord();
-        }
+      timeoutId = setTimeout(() => {
+        stopRecording();
       }, 60000);
+    }
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [isRecording]);
+
+  const handleRecord = () => {
+    if (isRecording) {
+      stopRecording();
+    } else {
+      startRecording();
     }
   };
 

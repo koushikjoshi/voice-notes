@@ -100,8 +100,8 @@ p {
   text-align: center;
   letter-spacing: -0.02em;
   overflow: hidden;
-
   color: #ffffff;
+  position: relative;
 }
 .heading {
   width: 78px;
@@ -159,6 +159,26 @@ p {
   cursor: pointer;
 }
 
+.record-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background-color: #7c0a02;
+  transition: width 60s linear;
+}
+
 .record-btn.red {
   background: red;
+}
+
+.record-btn.red::before {
+  width: 100%;
+}
+
+.record-btn:not(.red)::before {
+  width: 0%;
+  transition: none;
 }
