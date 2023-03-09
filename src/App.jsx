@@ -66,7 +66,7 @@ function App() {
         type: "audio/mp3",
       });
       setSelectedFile(audioFile);
-      // handleGenerateSummary(audioFile);
+      handleGenerateSummary(audioFile);
     });
 
     recorderRef.current = mediaRecorder;
