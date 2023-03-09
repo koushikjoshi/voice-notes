@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./App.css";
 import { MdContentCopy } from "react-icons/md";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const WHISPER_ENDPOINT = "https://api.openai.com/v1/audio/transcriptions";
 
@@ -11,6 +12,20 @@ function App() {
   const [isRecording, setIsRecording] = useState(false);
   const [progress, setProgress] = useState(0);
   const recorderRef = useRef(null);
+  const [typedText, setTypedText] = useState("");
+
+  useEffect(() => {
+    let index = 0;
+    const intervalId = setInterval(() => {
+      if (index === summary.length) {
+        clearInterval(intervalId);
+      } else {
+        setTypedText(summary.slice(0, index + 1));
+        index++;
+      }
+    }, 30); // typing speed in milliseconds
+    return () => clearInterval(intervalId);
+  }, [summary]);
 
   useEffect(() => {
     let interval;
@@ -173,14 +188,12 @@ function App() {
         <div className="summary-div">
           <div className="heading summary-heading">
             <p className="summary-p">Summary</p>
-            <MdContentCopy
-              className="copy-icon"
-              size={15}
-              onClick={handleCopy}
-            />
+            <CopyToClipboard text={summary}>
+              <MdContentCopy className="copy-icon" size={15} />
+            </CopyToClipboard>
           </div>
           <div className="summary-text content">
-            <p>{summary}</p>
+            <p>{typedText}</p>
           </div>
           <div className="madewithlove">
             <p>
