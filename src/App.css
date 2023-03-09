@@ -222,3 +222,26 @@ p {
 
   color: #000000;
 }
+
+.green {
+  border: 4px solid #335052;
+  animation: pulse 2s infinite;
+}
+
+.transcript-heading {
+  display: flex;
+  flex-direction: row;
+}
+
+@keyframes pulse {
+  0% {
+    border-color: #335052;
+  }
+  50% {
+    border-color: #d7fdc3;
+    border-width: 2px;
+  }
+  100% {
+    border-color: #335052;
+  }
+}

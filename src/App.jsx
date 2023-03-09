@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import "./App.css";
 import { MdContentCopy } from "react-icons/md";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import { RiLoaderLine } from "react-icons/ri";
 
 const WHISPER_ENDPOINT = "https://api.openai.com/v1/audio/transcriptions";
 
@@ -10,6 +11,7 @@ function App() {
   const [transcript, setTranscript] = useState("");
   const [summary, setSummary] = useState("");
   const [isRecording, setIsRecording] = useState(false);
+  const [isApiCalling, setIsApiCalling] = useState(false);
   const [progress, setProgress] = useState(0);
   const recorderRef = useRef(null);
   const [typedText, setTypedText] = useState("");
@@ -26,22 +28,6 @@ function App() {
     }, 30); // typing speed in milliseconds
     return () => clearInterval(intervalId);
   }, [summary]);
-
-  useEffect(() => {
-    let interval;
-    if (isRecording) {
-      interval = setInterval(() => {
-        setProgress((prevProgress) => prevProgress + 1.67);
-      }, 1000);
-    } else {
-      setProgress(0);
-    }
-    return () => clearInterval(interval);
-  }, [isRecording]);
-
-  const handleCopy = () => {
-    navigator.clipboard.write(summary);
-  };
 
   const handleGenerateSummary = async (transcript) => {
     console.log(transcript);
@@ -66,6 +52,7 @@ function App() {
       });
       const result = await response.json();
       setSummary(result.choices[0].text.trim());
+      setIsApiCalling(false);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -77,6 +64,7 @@ function App() {
     formData.append("model", "whisper-1");
 
     try {
+      setIsApiCalling(true);
       const response = await fetch(WHISPER_ENDPOINT, {
         method: "POST",
         headers: {
@@ -176,10 +164,17 @@ function App() {
       </div>
       <div className="text-div">
         <div className="transcript-div">
-          <div className="heading">
+          <div className="transcript-heading heading">
             <p>Transcript</p>
+            {isApiCalling && (
+              <p style={{ fontSize: "12px", paddingLeft: "10px" }}>
+                generating...
+              </p>
+            )}
           </div>
-          <div className="transcript-text content">
+          <div
+            className={`transcript-text content ${isApiCalling ? "green" : ""}`}
+          >
             <div className="final-transcript">
               <p>{transcript}</p>
             </div>
