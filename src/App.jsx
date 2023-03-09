@@ -24,7 +24,39 @@ function App() {
     return () => clearInterval(interval);
   }, [isRecording]);
 
-  const handleGenerateSummary = async (audioFile) => {
+  const handleCopy = () => {
+    navigator.clipboard.write(summary);
+  };
+
+  const handleGenerateSummary = async (transcript) => {
+    console.log(transcript);
+    try {
+      console.log("generating summary");
+      const response = await fetch("https://api.openai.com/v1/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.REACT_APP_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: "text-davinci-003",
+          prompt: `Give me a consise summary of this text:\n A neutron star is the collapsed core of a massive supergiant star, which had a total mass of between 10 and 25 solar masses, possibly more if the star was especially metal-rich.[1] Neutron stars are the smallest and densest stellar objects, excluding black holes and hypothetical white holes, quark stars, and strange stars.[2] Neutron stars have a radius on the order of 10 kilometres (6.2 mi) and a mass of about 1.4 solar masses.[3] They result from the supernova explosion of a massive star, combined with gravitational collapse, that compresses the core past white dwarf star density to that of atomic nuclei.\n the summary is:\n Neutron stars are the collapsed cores of massive supergiant stars, with a radius of around 10 kilometres and a mass of 1.4 solar masses. They are formed from the supernova explosion of a massive star combined with gravitational collapse, compressing the core beyond white dwarf star density.\n Give me a consise summary of this text:\n Marlon Brando was an American actor considered one of the most influential actors of the 20th century. He received numerous accolades throughout his career which spanned six decades including two Academy Awards, two Golden Globe Awards, one Cannes Film Festival Award and three British Academy Film Awards. Brando was also a civil rights activist and various Native American movements. Having studied the Stella Adler in 1940s, he is credited with being one of the first actors to bring the Stanislavski system of acting and method acting to mainstream audiences.
+\n the summary is:\n Marlon Brando was an American actor considered one of the most influential actors of the 20th century. He received numerous accolades throughout his career which spanned six decades including two Academy Awards, two Golden Globe Awards, one Cannes Film Festival Award and three British Academy Film Awards. Brando was also a civil rights activist and various Native American movements.\n Give me a consise summary of this text:\n Musk was born in Pretoria, South Africa and briefly attended the University of Pretoria before moving to Canada at age 18, acquiring citizenship through his Canadian-born mother. Two years later, he matriculated at Queen's University and transferred to the University of Pennsylvania, where he received bachelor's degrees in economics and physics. He moved to California in 1995 to attend Stanford University. After two days, he dropped out with his brother, Kimbal, and co-founded the online city guide software company Zip2. In 1999, Zip2 was acquired by Compaq for $307 million and Musk co-founded X.com, a direct bank. X.com merged with Confinity in 2000 to form PayPal, which eBay acquired for $1.5 billion in 2002.\n the summary is:\n Musk was born in Pretoria, South Africa and briefly attended the University of Pretoria before moving to Canada at age 18, acquiring citizenship through his Canadian-born mother. He moved to California in 1995 to attend Stanford University. In 1999, Zip2 was acquired by Compaq for $307 million and Musk co-founded X.com, a direct bank.\n Give me a consise summary of this text:\n ${transcript}\n\n the summary is:`,
+          temperature: 0.7,
+          max_tokens: 60,
+          top_p: 1.0,
+          frequency_penalty: 0.0,
+          presence_penalty: 1,
+        }),
+      });
+      const result = await response.json();
+      setSummary(result.choices[0].text.trim());
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const handleGenerateTranscript = async (audioFile) => {
     const formData = new FormData();
     formData.append("file", audioFile);
     formData.append("model", "whisper-1");
@@ -39,7 +71,8 @@ function App() {
       });
       const result = await response.json();
       setTranscript(result.text);
-      setSummary("Summary shows here");
+      handleGenerateSummary(result.text);
+      // setSummary("Summary shows here");
     } catch (error) {
       console.error("Error:", error);
     }
@@ -66,7 +99,7 @@ function App() {
         type: "audio/mp3",
       });
       setSelectedFile(audioFile);
-      handleGenerateSummary(audioFile);
+      handleGenerateTranscript(audioFile);
     });
 
     recorderRef.current = mediaRecorder;
@@ -140,7 +173,11 @@ function App() {
         <div className="summary-div">
           <div className="heading summary-heading">
             <p className="summary-p">Summary</p>
-            <MdContentCopy className="copy-icon" size={15} />
+            <MdContentCopy
+              className="copy-icon"
+              size={15}
+              onClick={handleCopy}
+            />
           </div>
           <div className="summary-text content">
             <p>{summary}</p>
