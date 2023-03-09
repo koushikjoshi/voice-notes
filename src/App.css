@@ -159,6 +159,11 @@ p {
   cursor: pointer;
 }
 
+.record-btn p {
+  position: relative;
+  z-index: 2;
+}
+
 .record-btn::before {
   content: "";
   position: absolute;

@@ -123,7 +123,7 @@ function App() {
               className={`record-btn ${isRecording ? "red" : ""}`}
               onClick={handleRecord}
             >
-              {isRecording ? "Stop Recording" : "Start Recording"}
+              <p>{isRecording ? "Stop Recording" : "Start Recording"}</p>
             </div>
           </div>
         </div>
