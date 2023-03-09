@@ -113,9 +113,7 @@ function App() {
             {isRecording ? (
               <p>Recording...</p>
             ) : (
-              <p>
-                Record your random thoughts, and get a point-by-point summary
-              </p>
+              <p>Record your random thoughts, and receive a concise summary</p>
             )}
           </div>
           <div className="upload-logic">
@@ -146,6 +144,18 @@ function App() {
           </div>
           <div className="summary-text content">
             <p>{summary}</p>
+          </div>
+          <div className="madewithlove">
+            <p>
+              made with ❤️ by{" "}
+              <a
+                href="https://twitter.com/koushikjoshi"
+                style={{ textDecorationColor: "none", color: "#000000" }}
+                target="_blank"
+              >
+                koushik
+              </a>
+            </p>
           </div>
         </div>
       </div>

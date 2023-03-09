@@ -1,7 +1,8 @@
 .App {
   text-align: center;
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
+  height: fit-content;
   flex-direction: column;
   align-items: center;
   padding-left: 20px;
@@ -186,4 +187,38 @@ p {
 .record-btn:not(.red)::before {
   width: 0%;
   transition: none;
+}
+
+.summary-text {
+  padding-bottom: 20px;
+  text-align: justify;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 19px;
+
+  color: #000000;
+}
+
+.summary-text p {
+  padding-top: 21px;
+}
+
+.madewithlove {
+  width: 363px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  bottom: 10px;
+  padding-bottom: 20px;
+  padding-top: 30px;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 19px;
+
+  color: #000000;
 }
